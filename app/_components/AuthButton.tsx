@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  Session,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 
-export const AuthButton = () => {
+export const AuthButton = ({ session }: { session: Session | null }) => {
   // Supabaseクライアント作成
   const supabase = createClientComponentClient();
   const router = useRouter();
@@ -24,10 +27,10 @@ export const AuthButton = () => {
     router.refresh();
   };
 
-  return (
-    <>
-      <button onClick={handleSignIn}>Login</button>
-      <button onClick={handleSignOut}>Logout</button>
-    </>
+  return session ? (
+    // Sessionがあるかどうかで認証ボタンを切り替える
+    <button onClick={handleSignOut}>Logout</button>
+  ) : (
+    <button onClick={handleSignIn}>Login</button>
   );
 };
